@@ -1,6 +1,6 @@
 ## Asidlale
 
-This repo includes anonymized data and analysis of the [iThemba Projects'](www.ithembaprojects.org.za) Asidlale Creche Programme in Sweetwaters, South Africa. Data was collected between 2013-2016 from 276 students entering grade R at two primary schools in Sweetwaters. Each student was assessed on 14 exercises involving cognition and motor skills, receiving a score from 1 (low) to 3 (high).
+This repo includes anonymized data and analysis of the [iThemba Projects'](http://www.ithembaprojects.org.za/splash-page.html) Asidlale Creche Programme in Sweetwaters, South Africa. Data was collected between 2013-2016 from 276 students entering grade R at two primary schools in Sweetwaters. Each student was assessed on 14 exercises involving cognition and motor skills, receiving a score from 1 (low) to 3 (high).
 
 
 ### Goals:
