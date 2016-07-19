@@ -11,7 +11,7 @@ library(reshape2)
 asi = read.csv("asidlale_raw_anonymized.csv")
 
 
-# data overview ----
+# Data Overview and Preprocessing ----
 
 #table counting particpants
 table(asi$asidlale, asi$year)
@@ -47,6 +47,7 @@ asi$score_cognitive = apply(cbind(asi$self_pic, asi$matching, asi$draw_lines, as
                                   asi$six_puzz, asi$classification, asi$five_puzz), 
                        MARGIN = 1, FUN=mean, na.rm=TRUE)
 
+
 # Make matrix showing avg asidlale scores over 4 years by creche category ----
 years = c("2013", "2014", "2015", "2016")
 categories = c("year", "asidlale", "creche", "not_asidlale_creche", "not_asidlale", "not_creche")
@@ -79,6 +80,7 @@ ggplot(data = sum_results_long,
   ggtitle("Asidlale Results by Creche Type") +
   xlab("Year") + ylab("Average Score")
 ggsave("images/results_by_creche_type.png")
+
 
 # Compare Mabane and Nobanda results ----
 categories = c("year", "Nobanda", "Mabane")
@@ -237,3 +239,49 @@ tasks = colnames(asi)[14:ncol(asi)]
 for(i in 1:length(tasks)){
   make_graph(tasks[i])
 }
+
+
+# Age_months analysis ----
+
+hist(asi$age_months)
+plot(asi$age_months, asi$score14)
+
+asi$asidlale = as.factor(asi$asidlale)
+asi$score_avg = asi$score14/14
+
+ggplot(data = asi, aes(x=age_months, y=score_avg, col=asidlale)) +
+  geom_point()
+
+
+lm(score_avg ~ asidlale, data=asi[asi$year==2013,]) #0.306; 14.0% better
+lm(score_avg ~ asidlale, data=asi[asi$year==2014,]) #0.390; 18.8% better
+lm(score_avg ~ asidlale, data=asi[asi$year==2015,]) #0.427; 21.6% better
+lm(score_avg ~ asidlale, data=asi[asi$year==2016,]) #0.249; 12.0% better
+lm(score_avg ~ asidlale, data=asi) #0.34                  ; 16.6% better
+
+lm(score_avg ~ asidlale, data=asi[(asi$year==2013 & asi$creche != "none"),]) #0.185; 7.8% better
+lm(score_avg ~ asidlale, data=asi[(asi$year==2014 & asi$creche != "none"),]) #0.220; 9.8% better
+lm(score_avg ~ asidlale, data=asi[(asi$year==2015 & asi$creche != "none"),]) #0.213; 9.7% better
+lm(score_avg ~ asidlale, data=asi[(asi$year==2016 & asi$creche != "none"),]) #0.143; 6.5% better
+lm(score_avg ~ asidlale, data=asi[asi$creche != "none",])                    #0.184; 8.2% better
+
+
+
+asi_vs_rest_model = lm(score_avg ~ asidlale, data=asi)
+summary(asi_vs_rest_model)
+
+asi_vs_creche_model = lm(score_avg ~ asidlale, data=asi[asi$creche != "none",])
+summary(asi_vs_creche_model)
+
+asi_age_vs_rest_model = lm(score_avg ~ asidlale + age_months, data=asi)
+summary(asi_age_vs_rest_model)
+
+asi_age_vs_creche_model = lm(score_avg ~ asidlale + age_months, data=asi[asi$creche != "none",])
+summary(asi_age_vs_creche_model)
+
+age_vs_rest_model = lm(score_avg ~ age_months, data=asi)
+summary(age_vs_rest_model)
+
+age_vs_creche_model = lm(score_avg ~ age_months, data=asi[asi$creche != "none",])
+summary(age_vs_creche_model)
+
