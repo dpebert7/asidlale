@@ -8,7 +8,7 @@
 library(ggplot2)
 library(reshape2)
 
-asi = read.csv("asidlale_raw.csv")
+asi = read.csv("asidlale_raw_anonymized.csv")
 
 
 # data overview ----
@@ -78,8 +78,7 @@ ggplot(data = sum_results_long,
   geom_line(size=2) +
   ggtitle("Asidlale Results by Creche Type") +
   xlab("Year") + ylab("Average Score")
-
-
+ggsave("images/results_by_creche_type.png")
 
 # Compare Mabane and Nobanda results ----
 categories = c("year", "Nobanda", "Mabane")
@@ -102,7 +101,7 @@ ggplot(data = school_results_long,
   geom_line(size=2) +
   ggtitle("Asidlale Results by School") +
   xlab("Year") + ylab("Average Score")
-
+ggsave("images/results_by_school.png")
 
 
 # Does the drop go away when we only look at Nobanda? ----
@@ -135,7 +134,7 @@ ggplot(data = sum_results_long,
   geom_line(size=2) +
   ggtitle("Asidlale Results for Nobanda by Creche Type") +
   xlab("Year") + ylab("Average Score")
-
+ggsave("images/nobanda_by_creche_type.png")
 
 
 # Does the drop appear stronger at Mabane? ----
@@ -168,7 +167,7 @@ ggplot(data = sum_results_long,
   geom_line(size=2) +
   ggtitle("Asidlale Results for Mabane by Creche Type") +
   xlab("Year") + ylab("Average Score")
-
+ggsave("images/mabane_by_creche_type.png")
 
 
 # Results by Creche? ----
@@ -201,7 +200,7 @@ ggplot(data = sum_results_long,
   geom_line(size=2) +
   ggtitle("Asidlale Results by Creche") +
   xlab("Year") + ylab("Average Score")
-
+ggsave("images/results_by_creche.png")
 
 
 # Make matrix showing avg scores for each task over 4 years by creche category ----
@@ -230,14 +229,11 @@ make_graph = function(attribute){
     geom_line(size=2) +
     ggtitle(paste("Results by Creche Type: ", attribute, sep = "")) +
     xlab("Year") + ylab("Average Score")
+  ggsave(paste("images/detailed_images/", attribute, ".png", sep = ""))
 }
 
 
 tasks = colnames(asi)[14:ncol(asi)]
 for(i in 1:length(tasks)){
-  print(make_graph(tasks[i]))
+  make_graph(tasks[i])
 }
-
-
-
-
