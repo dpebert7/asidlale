@@ -1,5 +1,6 @@
 # Ebert
 # 1 March 2018
+# Updated 22 March 2018 to include ECHS
 # Asidlale report data
 
 # Goal: Investigate results of Asidlale data over the last 4 years. 
@@ -427,3 +428,84 @@ for(i in 1:length(schools)){
   print(schools[i])
   print(make_school_profile(schools[i]))
 }
+
+
+
+
+
+
+########################
+### ECHS COMPARISONS ###
+########################
+
+sum(
+  length(asi[asi$year==thisyear & asi$echs == 0,]$score_gross),
+  length(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 0,]$score_gross),
+  length(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score_gross)
+) # Should be 122 in 2018
+
+
+# GROSS MOTOR SKILLS
+# Asidlale kids: ECHS vs NO ECHS
+mean(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score_gross)# >= score_cutoff)
+mean(asi[asi$year==thisyear & asi$echs == 0 & asi$asidlale == 1,]$score_gross)# >= score_cutoff)
+
+
+# FINE MOTOR SKILLS
+# Asidlale kids: ECHS vs NO ECHS
+mean(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score_fine)# >= score_cutoff)
+mean(asi[asi$year==thisyear & asi$echs == 0 & asi$asidlale == 1,]$score_fine)# >= score_cutoff)
+
+
+# COGNITIVE SKILLS
+# Asidlale kids: ECHS vs NO ECHS
+mean(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score_cognitive)# >= score_cutoff)
+mean(asi[asi$year==thisyear & asi$echs == 0 & asi$asidlale == 1,]$score_cognitive)# >= score_cutoff)
+
+# ALL SKILLS COMBINED
+# Asidlale kids: ECHS vs NO ECHS
+mean(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score14/14)
+mean(asi[asi$year==thisyear & asi$echs == 0 & asi$asidlale == 1,]$score14/14)
+
+
+####################
+### ECHS RESULTS ###
+####################
+
+table(asithisyear$echs, asithisyear$asidlale)
+
+# ECHS results will only compare the 8 echs students to the 53 other students in asidlale.
+#   THat is, we will ignore the 61 students who neither took part in ECHS nor asidlale
+#
+# Among kids who DID attend an asidlale creche, the 8 kids in the ECHS programme averaged just a
+#     little better than their peers. (2.40 vs 2.35 average out of 3)
+# 
+# Among kids who DID attend an asidlale creche, the 8 kids in the ECHS programme performed a little
+#     WORSE than their peers in gross motor skills (2.57 vs 2.68 average out of 3).
+#     However, they performed a lot better in fine motor skills (2.17 vs 1.79 average out of 3).
+#     Still need to check if this is statistically significant.
+#
+# Comparing fine skills among asidlale students
+t.test(asi[asi$year==thisyear & asi$echs == 1 & asi$asidlale == 1,]$score_fine, 
+       asi[asi$year==thisyear & asi$echs == 0 & asi$asidlale == 1,]$score_fine, 
+       var.equal=TRUE, 
+       paired=FALSE)
+
+# It's close, but not (even when setting var.equal to TRUE). 
+# I would avoid making strong statements about how ECHS students 
+#     compare to other asidlale students.
+
+# Comparing fine skills among ALL students
+t.test(asi[asi$year==thisyear & asi$echs == 1,]$score_fine, 
+       asi[asi$year==thisyear & asi$echs == 0,]$score_fine, 
+       var.equal=TRUE, 
+       paired=FALSE,
+       conf.level = 0.95,
+       alternative = "greater")
+
+# ECHS students perform better than other students in fine motor skills.
+
+#
+#
+# The sample size is too small for statistical significance, but the 3 kids who are in ECHS but not creche
+#     perform much better than their peers who don't attend creche, especially in cognitive tasks.
