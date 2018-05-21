@@ -387,10 +387,10 @@ for(i in 1:length(tasks)){
 
 
 ###########################
-### MAKE SCHOOL PROFILE ###
+### MAKE CRECHE PROFILE ###
 ###########################
 
-make_school_profile = function(creche_name){
+make_creche_profile = function(creche_name){
   #years = c("2013", "2014", "2015", "2016", "2017", "2018")
   this_year = 2018
   #tasks = colnames(asi)[14:ncol(asi)]
@@ -419,17 +419,59 @@ make_school_profile = function(creche_name){
   return(sum_results)
 }
 
-schools = c("kwaNomusa", "Sbukosezwe", "Raphs", "Umkhuleko", "iThemba", "Sunrise", "other", "none")
+creches = c("kwaNomusa", "Sbukosezwe", "Raphs", "Umkhuleko", "iThemba", "Sunrise", "other", "none")
+for(i in 1:length(creches)){
+  print(" ")
+  print(" ")
+  print(" ")
+  print(" ")
+  print(creches[i])
+  print(make_creche_profile(creches[i]))
+}
+
+
+
+
+
+############################
+### MAKE SCHOOL PROFILES ###
+############################
+
+make_school_profile = function(school_name){
+  #years = c("2013", "2014", "2015", "2016", "2017", "2018")
+  this_year = 2018
+  #tasks = colnames(asi)[14:ncol(asi)]
+  tasks = c("cut", "follow_instruct", "self_pic", "matching", "draw_lines", "hop", "playdough",
+            "clapping", "classification", "five_puzz", "dance_freeze", "laminated_shape",
+            "beanbag", "read_book", "score_fine", "score_gross", "score_cognitive", "mean14")
+  
+  sum_results = as.data.frame((matrix(nrow=length(tasks), ncol=4)))
+  colnames(sum_results) = c("School Avg Last Year","School Average This year", "Population Average", "Difference From Average")
+  rownames(sum_results) = tasks
+  
+  decimal_places = 1 # should be 1 or 2
+  for(i in 1:length(tasks)){
+    sum_results[i,1] = round(mean(asi[(asi$year == this_year-1 & asi$school == school_name), tasks[i]], na.rm = TRUE),decimal_places)
+    sum_results[i,2] = round(mean(asi[(asi$year == this_year & asi$school == school_name), tasks[i]], na.rm = TRUE),decimal_places)
+    sum_results[i,3] = round(mean(asi[(asi$year == this_year), tasks[i]], na.rm = TRUE),decimal_places)
+    sum_results[i,4] = round(sum_results[i,2]-sum_results[i,3], decimal_places)
+  }
+  
+  #sum_results = sum_results[!is.na(sum_results$population_average),] # Remove NA's
+  #sum_results[order(sum_results$difference_from_average),] # Sort by "difference_from_average"
+  
+  write.csv(sum_results, file = paste("school_results/",school_name, "_school_results_2017.csv", sep = ""))
+  #Someday it would be good to put these into separate sheets in ONE Excel file.
+  
+  return(sum_results)
+}
+
+schools = c("Mabane", "Mbubu", "Nobanda", "Sweetwaters")
 for(i in 1:length(schools)){
-  print(" ")
-  print(" ")
-  print(" ")
   print(" ")
   print(schools[i])
   print(make_school_profile(schools[i]))
 }
-
-
 
 
 
